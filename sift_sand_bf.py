@@ -1,6 +1,6 @@
 #File name: sift_sand_bf 1.0 py ==> Parent 2.3.2/main_siv_2.3.2
 #change:
-#   kiiti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset'
+#   kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset'
 #   OOPs last frame storage
 #   matching(BF)
 #To do:
