@@ -3,7 +3,7 @@
 #   OOPs last frame storage
 #   matching
 #To do:
-#           
+#
 #   correlate keypoints to pixels (Not required)
             #AKA insert column at the start
 #   Bring back main
@@ -60,23 +60,16 @@ print('len(images)',len(images))
 key_sand_des = []
 
 #store key point attributes
-class last_frame: #last_frame_keyPoint(x_cord,y_cord,Key_sand_desc)
-    
+class last_frame: #last_frame_keyPoint(x_cord,y_cord,key_sand_des)
+
     # def store_key_des(desc_points,size): #function/method to store KeyDesc
     #     for r in range(1,len(images)): #iterate for all images
     #         desc[r]=desc_points
-    
-    def __init__(self,x_cord,y_cord,Key_sand_desc):
+
+    def __init__(self,x_cord,y_cord,key_sand_des):
         self.x_cordinate = x_cord
         self.y_cordinate = y_cord
-        self.Key_sand_desc = Key_sand_desc
-
-
-
-
-
-
-
+        self.key_sand_des = key_sand_des
 
 
 ####### FOR ALL IMAGES IN THE FOLDER do SAND and SIFT ###########
@@ -171,13 +164,14 @@ for z in range(0, len(images)):
     #reshape vector
     key_sand_des=key_sand_des.reshape(-1,10) #length(cordinates) x 10 dimension descriptor
     print('key_sand_des.shape', key_sand_des.shape, '\n ')
-
+    last_frame(x_cord, y_cord, key_sand_des)
     # matching
-    if z!=0:
-
-        BFMatcher with default params
+    if z==0: #avoid over riding last frame values
+        last_frame(x_cord, y_cord, key_sand_des)
+    else: #only match if atleast 2 frames r present
+        #BFMatcher with default params
         bf = cv.BFMatcher()
-        matches = bf.knnMatch(last_frame., key_sand_des, k=2)
+        matches = bf.knnMatch(last_frame.key_sand_des, key_sand_des, k=2)
         # Apply ratio test
         good = []
         for m, n in matches:
@@ -187,7 +181,7 @@ for z in range(0, len(images)):
         img3 = cv.drawMatchesKnn(image[z-1], kp1, img2, kp2, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         plt.imshow(img3), plt.show()
     # ########################
-    last_frame(x_cord, y_cord, key_sand_des)
+
 
         #key points(SIFT) and descriptors(SAND)
 
