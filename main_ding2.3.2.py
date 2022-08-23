@@ -1,4 +1,4 @@
-#File name: Main2.3.2 py ==> Parent 2.3
+#File name: main_ding ==> main2.3.2 py
 #change: [z] added
 #         removed main
 #To do:
