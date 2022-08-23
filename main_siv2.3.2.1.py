@@ -2,11 +2,8 @@
 #change:
 #   OOPs last frame storage
 #   matching
-# 
 #To do:
-
-#
-#           loop n times (On progress)
+#           
 #   correlate keypoints to pixels (Not required)
             #AKA insert column at the start
 #   Bring back main
@@ -63,10 +60,12 @@ print('len(images)',len(images))
 key_sand_des = []
 
 #store key point attributes
-class last_frame_keyPoints: #last_frame_keyPoint(x_cord,y_cord,Key_sand_desc)
-    def store_key_des(desc_points,size): #function/method to store KeyDesc
-        for r in range(1,len(images)): #iterate for all images
-            desc[r]=desc_points
+class last_frame: #last_frame_keyPoint(x_cord,y_cord,Key_sand_desc)
+    
+    # def store_key_des(desc_points,size): #function/method to store KeyDesc
+    #     for r in range(1,len(images)): #iterate for all images
+    #         desc[r]=desc_points
+    
     def __init__(self,x_cord,y_cord,Key_sand_desc):
         self.x_cordinate = x_cord
         self.y_cordinate = y_cord
@@ -169,38 +168,28 @@ for z in range(0, len(images)):
 
         key_sand_des.append(features_np[y, x])
     key_sand_des=np.asarray(key_sand_des) #converting to array
-
-    last_frame_keyPoints(x_cord,y_cord,key_sand_des)
-
     #reshape vector
     key_sand_des=key_sand_des.reshape(-1,10) #length(cordinates) x 10 dimension descriptor
     print('key_sand_des.shape', key_sand_des.shape, '\n ')
-    #print('Reshaped key_sand_des.ndim', key_sand_des.ndim,'\n \t\t shape =',key_sand_des.shape)
-    #print('reshaped key_sand_des.shape', key_sand_des.shape)
-    #print('key_sand_des', key_sand_des)
 
     # matching
     if z!=0:
-        
+
         BFMatcher with default params
         bf = cv.BFMatcher()
-        matches = bf.knnMatch(last_frame_keyPoints., des2, k=2)
+        matches = bf.knnMatch(last_frame., key_sand_des, k=2)
         # Apply ratio test
         good = []
         for m, n in matches:
             if m.distance < 0.75 * n.distance:
                 good.append([m])
         # cv.drawMatchesKnn expects list of lists as matches.
-        img3 = cv.drawMatchesKnn(img1, kp1, img2, kp2, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+        img3 = cv.drawMatchesKnn(image[z-1], kp1, img2, kp2, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         plt.imshow(img3), plt.show()
     # ########################
+    last_frame(x_cord, y_cord, key_sand_des)
 
         #key points(SIFT) and descriptors(SAND)
 
         # if __name__ == '__main__':
         #     main()
-
-
-
-
-
