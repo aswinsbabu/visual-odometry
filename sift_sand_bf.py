@@ -1,13 +1,13 @@
 #File name: sift_sand_bf 1.0 py ==> Parent 2.3.2/main_siv_2.3.2
 #change:
-#   kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset'
+#   
 #   OOPs last frame storage
 #   matching(BF)
 #To do:
-#
-#   correlate keypoints to pixels (Not required)
-            #AKA insert column at the start
-#   Bring back main
+#           kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset//sequences'
+#           Odometry
+#           different matching
+#           Bring back main
 #Done:  Sand key points obtained
 #       reshape keyP desc matrix
 #   matching
