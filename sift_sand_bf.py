@@ -49,7 +49,7 @@ from os import listdir
 from os.path import isfile, join
 
 image_path=ROOT/'images'
-#image_path='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset'
+#image_path='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00'
 onlyfiles = [ f for f in listdir(image_path) if isfile(join(image_path,f)) ]
 images = np.empty(len(onlyfiles), dtype=object)
 
