@@ -1,18 +1,13 @@
 #File name: sift_sand_bf 1.0 py ==> Parent 2.3.2/main_siv_2.3.2
 #change:
-#   
+#   kiiti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset';/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00
 #   OOPs last frame storage
 #   matching(BF)
 #To do:
-#           kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset//sequences'
-#           Odometry
-#           different matching
-#           Bring back main
-#Done:  Sand key points obtained
-#       reshape keyP desc matrix
-#   matching
-#       Insert 2 images and compute
-#           display all n images (done)
+#
+#   correlate keypoints to pixels (Not required)
+            #AKA insert column at the start
+#   Bring back main
 
 # ---Stdlib---
 import sys
@@ -21,6 +16,8 @@ from pathlib import Path
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+from os import listdir
+from os.path import isfile, join
 
 # ---Dependencies---
 import torch
@@ -35,7 +32,6 @@ if str(ROOT) not in sys.path:
 from utils import ops
 from models import Sand
 
-
 DEFAULT_MODEL_NAME = 'ckpt_G10D' #10 channel
 DEFAULT_MODEL_PATH = ROOT/'ckpts'
 
@@ -45,23 +41,20 @@ parser.add_argument('--model-path', default=DEFAULT_MODEL_PATH, help='Path to di
 #parser.add_argument('--image-file', default=DEFAULT_IMAGE, help='Path to image to run inference on')
 
 #################### load images
-from os import listdir
-from os.path import isfile, join
-
 image_path=ROOT/'images'
 #image_path='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00'
 onlyfiles = [ f for f in listdir(image_path) if isfile(join(image_path,f)) ]
 images = np.empty(len(onlyfiles), dtype=object)
+print('len(images)',len(images))
 
 #load all images in folder ROOT/'images'
 for n in range(0, len(onlyfiles)):
   images[n] = cv.imread( join(image_path,onlyfiles[n]) )
 print('len(images)',len(images))
 
-#
-key_sand_des = []
 
 #store key point attributes
+key_sand_des = []
 class frame_store: #last_frame_keyPoint(x_cord,y_cord,key_sand_des)
     def __init__(self, x_cord, y_cord,keypoints, key_sand_des):
 
@@ -70,21 +63,12 @@ class frame_store: #last_frame_keyPoint(x_cord,y_cord,key_sand_des)
         self.keypoints = keypoints
         self.key_sand_des = key_sand_des
 
-
-    # def store_key_des(desc_points,size): #function/method to store KeyDesc
-    #     for r in range(1,len(images)): #iterate for all images
-    #         desc[r]=desc_points
-
-
-
-
 ####### FOR ALL IMAGES IN THE FOLDER do SAND and SIFT ###########
 for z in range(0, len(images)):
 
     def get_feat_descrpt():
         args = parser.parse_args()
         device = ops.get_device()
-
         ckpt_file = Path(args.model_path, args.model_name).with_suffix('.pt')
         #change
         img_file = images[z]
@@ -111,7 +95,6 @@ for z in range(0, len(images)):
 
     #convert to grayscale image
     gray_scale = cv.cvtColor(images[z], cv.COLOR_BGR2GRAY)
-
     #initialize SIFT object
     sift = cv.SIFT_create()
     keypoints,desc= sift.detectAndCompute(images[z], None)
@@ -122,9 +105,8 @@ for z in range(0, len(images)):
 
         y_cord.append(int(keypoints[i].pt[1]))
     #mains()
-
-
-    ########################################################
+########################################################
+    
     #def mains():
     args = parser.parse_args()
     device = ops.get_device()
@@ -156,7 +138,6 @@ for z in range(0, len(images)):
     print(f'SAND Feature size (torch): {features_torch.shape}')
     print(f'SAND Feature size (np): {features_np.shape}')
 
-
     ######### pick SIFT features#####
     prev_desc= key_sand_des = []
     key_sand_des = []
@@ -187,11 +168,7 @@ for z in range(0, len(images)):
         img3 = cv.drawMatchesKnn(images[z-1], last_frame.keypoints, images[z], keypoints, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         plt.imshow(img3), plt.show()
     last_frame = frame_store(x_cord, y_cord, keypoints, key_sand_des)
-
-    # ########################
-
-
-        #key points(SIFT) and descriptors(SAND)
+########################
 
         # if __name__ == '__main__':
         #     main()
