@@ -1,18 +1,13 @@
 #File name: sift_sand_bf 1.0 py ==> Parent 2.3.2/main_siv_2.3.2
 #change:
-#   
+#   kiiti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset';/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00
 #   OOPs last frame storage
 #   matching(BF)
 #To do:
-#           kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset//sequences'
-#           Odometry
-#           different matching
-#           Bring back main
-#Done:  Sand key points obtained
-#       reshape keyP desc matrix
-#   matching
-#       Insert 2 images and compute
-#           display all n images (done)
+#
+#   correlate keypoints to pixels (Not required)
+            #AKA insert column at the start
+#   Bring back main
 
 # ---Stdlib---
 import sys
@@ -20,7 +15,10 @@ from argparse import ArgumentParser
 from pathlib import Path
 import cv2 as cv
 import numpy as np
+import os
 import matplotlib.pyplot as plt
+from os import listdir
+from os.path import isfile, join
 
 # ---Dependencies---
 import torch
@@ -35,7 +33,6 @@ if str(ROOT) not in sys.path:
 from utils import ops
 from models import Sand
 
-
 DEFAULT_MODEL_NAME = 'ckpt_G10D' #10 channel
 DEFAULT_MODEL_PATH = ROOT/'ckpts'
 
@@ -44,24 +41,10 @@ parser.add_argument('--model-name', default=DEFAULT_MODEL_NAME, help='Name of mo
 parser.add_argument('--model-path', default=DEFAULT_MODEL_PATH, help='Path to directory containing models')
 #parser.add_argument('--image-file', default=DEFAULT_IMAGE, help='Path to image to run inference on')
 
-#################### load images
-from os import listdir
-from os.path import isfile, join
 
-image_path=ROOT/'images'
-#image_path='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00'
-onlyfiles = [ f for f in listdir(image_path) if isfile(join(image_path,f)) ]
-images = np.empty(len(onlyfiles), dtype=object)
-
-#load all images in folder ROOT/'images'
-for n in range(0, len(onlyfiles)):
-  images[n] = cv.imread( join(image_path,onlyfiles[n]) )
-print('len(images)',len(images))
-
-#
-key_sand_des = []
 
 #store key point attributes
+key_sand_des = []
 class frame_store: #last_frame_keyPoint(x_cord,y_cord,key_sand_des)
     def __init__(self, x_cord, y_cord,keypoints, key_sand_des):
 
@@ -70,31 +53,35 @@ class frame_store: #last_frame_keyPoint(x_cord,y_cord,key_sand_des)
         self.keypoints = keypoints
         self.key_sand_des = key_sand_des
 
-
-    # def store_key_des(desc_points,size): #function/method to store KeyDesc
-    #     for r in range(1,len(images)): #iterate for all images
-    #         desc[r]=desc_points
-
-
-
+#################### load images
+#image_dir=ROOT/'images'
+image_dir='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00/image_2' #color sequence
+image_ls = os.listdir(image_dir)#name of images: list of images
+image_ls.sort()#sorting list
+print('images list/image_ls',image_ls)
 
 ####### FOR ALL IMAGES IN THE FOLDER do SAND and SIFT ###########
-for z in range(0, len(images)):
+#for z in range(0, len(image_ls)):
+for image in image_ls:
+    z=0
+
+    image_paths = os.path.join(image_dir, image)
+    # print('image_path', image_paths)
+    image = cv.imread(image_paths, cv.IMREAD_COLOR)
 
     def get_feat_descrpt():
         args = parser.parse_args()
         device = ops.get_device()
-
         ckpt_file = Path(args.model_path, args.model_name).with_suffix('.pt')
         #change
-        img_file = images[z]
+        img_file = image
 
     # Load image & convert to torch format
         img_np = imread(img_file)
         img_torch = ops.img2torch(img_np, batched=True).to(device)
 
-        print(f'Image size (np): {img_np.shape}')
-        print(f'Image size (torch): {img_torch.shape}')
+        # print(f'Image size (np): {img_np.shape}')
+        # print(f'Image size (torch): {img_torch.shape}')
 
         # Create & load model (single branch)
         model = Sand.from_ckpt(ckpt_file).to(device)
@@ -110,11 +97,11 @@ for z in range(0, len(images)):
     ####################################### SIFT ##########################
 
     #convert to grayscale image
-    gray_scale = cv.cvtColor(images[z], cv.COLOR_BGR2GRAY)
-
+    gray_scale = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    #gray_scale= image#kitti is grey scale
     #initialize SIFT object
     sift = cv.SIFT_create()
-    keypoints,desc= sift.detectAndCompute(images[z], None)
+    keypoints,desc= sift.detectAndCompute(image, None)
     x_cord=[]
     y_cord=[]
     for i in range(0,len(keypoints),1):
@@ -122,23 +109,22 @@ for z in range(0, len(images)):
 
         y_cord.append(int(keypoints[i].pt[1]))
     #mains()
+########################################################
 
-
-    ########################################################
     #def mains():
     args = parser.parse_args()
     device = ops.get_device()
 
     ckpt_file = Path(args.model_path, args.model_name).with_suffix('.pt')
     #img_file = Path(args.image_file)
-    img_file = images[z]
+    img_file = image
 
     # Load image & convert to torch format
-    img_np = images[z]
+    img_np = image
     img_torch = ops.img2torch(img_np, batched=True).to(device)
 
-    print(f'Image size (np): {img_np.shape}')
-    print(f'Image size (torch): {img_torch.shape}')
+    # print(f'Image size (np): {img_np.shape}')
+    # print(f'Image size (torch): {img_torch.shape}')
 
     # Create & load model (single branch)
     model = Sand.from_ckpt(ckpt_file).to(device)
@@ -153,9 +139,8 @@ for z in range(0, len(images)):
 
     features_np = ops.torch2np(features_torch).squeeze(0)
 
-    print(f'SAND Feature size (torch): {features_torch.shape}')
-    print(f'SAND Feature size (np): {features_np.shape}')
-
+    # print(f'SAND Feature size (torch): {features_torch.shape}')
+    # print(f'SAND Feature size (np): {features_np.shape}')
 
     ######### pick SIFT features#####
     prev_desc= key_sand_des = []
@@ -169,7 +154,7 @@ for z in range(0, len(images)):
     key_sand_des=np.asarray(key_sand_des) #converting to array
     #reshape vector
     key_sand_des=key_sand_des.reshape(-1,10) #length(cordinates) x 10 dimension descriptor
-    print('key_sand_des.shape', key_sand_des.shape, '\n ')
+    # print('key_sand_des.shape', key_sand_des.shape, '\n ')
     #frame_store(x_cord, y_cord, key_sand_des)
     # matching
     if z==0: #avoid over riding last frame values
@@ -184,14 +169,13 @@ for z in range(0, len(images)):
             if m.distance < 0.75 * n.distance:
                 good.append([m])
         # cv.drawMatchesKnn expects list of lists as matches.
+        cv.imshow('prev frame', images[z-1])#change 
+        cv.imshow('current frame',images[z])
         img3 = cv.drawMatchesKnn(images[z-1], last_frame.keypoints, images[z], keypoints, good, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         plt.imshow(img3), plt.show()
     last_frame = frame_store(x_cord, y_cord, keypoints, key_sand_des)
-
-    # ########################
-
-
-        #key points(SIFT) and descriptors(SAND)
+z+=1
+########################
 
         # if __name__ == '__main__':
         #     main()
