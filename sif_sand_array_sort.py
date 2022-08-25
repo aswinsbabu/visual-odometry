@@ -1,7 +1,7 @@
 #File name: sif_sand_array_sort.py ==> Parent sift_sand_bf py
 #change:
 #   Sort array
-#   kiiti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset'
+#   kiiti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00/image_0/'
 #   OOPs last frame storage
 #
 #To do:
@@ -50,7 +50,7 @@ from os import listdir
 from os.path import isfile, join
 
 #image_path=ROOT/'images'
-image_path='/vol/research/visual_localization/experiments run/sand/SAND_features/images/smallkitti'
+image_path='/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00/image_2/'
 onlyfiles = [ f for f in listdir(image_path) if isfile(join(image_path,f)) ]
 onlyfiles.sort()
 images = np.empty(len(onlyfiles), dtype=object)
@@ -122,10 +122,7 @@ for z in range(0, len(images)):
     y_cord=[]
     for i in range(0,len(keypoints),1):
         x_cord.append(int(keypoints[i].pt[0]))
-
         y_cord.append(int(keypoints[i].pt[1]))
-    #mains()
-
 
     ########################################################
     #def mains():
@@ -161,25 +158,22 @@ for z in range(0, len(images)):
 
 
     ######### pick SIFT features#####
-    prev_desc= key_sand_des = []
+    #prev_desc= key_sand_des = []
     key_sand_des = []
 
     #picking descriptors of SIFT keypoints
     for y,x in zip(y_cord, x_cord): #for the pixels cordinates x and y pick SAND desc
-        #key_sand_des[z] = np.append(key_sand_des[z], features_np[y, x])
-
         key_sand_des.append(features_np[y, x])
     key_sand_des=np.asarray(key_sand_des) #converting to array
     #reshape vector
     key_sand_des=key_sand_des.reshape(-1,10) #length(cordinates) x 10 dimension descriptor
     print('key_sand_des.shape', key_sand_des.shape, '\n ')
-    #frame_store(x_cord, y_cord, key_sand_des)
+
     # matching
     if z==0: #avoid over riding last frame values
         last_frame=frame_store(x_cord, y_cord, keypoints, key_sand_des)
     else: #only match if atleast 2 frames r present
-        #BFMatcher with default params
-        bf = cv.BFMatcher()
+        bf = cv.BFMatcher() #BFMatcher with default params
         matches = bf.knnMatch(last_frame.key_sand_des, key_sand_des, k=2)
         # Apply ratio test
         good = []
