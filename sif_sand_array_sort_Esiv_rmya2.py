@@ -1,4 +1,4 @@
-#File name: sift_sand_array_F ==> Parent sif_sand_ransac.py/sift_sand_array_sort.py/sift_bf_ransac
+#File => Parent sif_sand_ransac.py/sift_sand_array_sort.py/sift_bf_ransac
 #change:
 #   combined & reshaped xy_cord  L 136
 
