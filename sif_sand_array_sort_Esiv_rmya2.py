@@ -296,7 +296,8 @@ try:
         # print('last_frame.xy_arrayP', last_frame.xy_arrayP)
         Point1 = last_frame.xy_arrayP
         Point2 = xy_array
-
+        
+        #make point size equal
         min_size=min(Point1.shape[0],Point2.shape[0])
         Point1 = Point1[:min_size,:]
         Point2 = Point2[:min_size, :]
