@@ -1,19 +1,25 @@
-#File => Parent sif_sand_ransac.py/sift_sand_array_sort.py/sift_bf_ransac
-#change:
-#   combined & reshaped xy_cord  L 136
+#File: sif_sand_array_sort_Esiv_TRmya2.py 
+#=> Parent sif_sand_array_sort_Esiv/sif_sand_ransac.py/sift_sand_array_sort.py/sift_bf_ransac
 
+#changes:
+#   Displayed R and T
 #   Display inlier & OL count
 #   Sort array
 #   kitti: '/vol/vssp/datasets/vid+depth/kitti/odometry/dataset/sequences/00/image_0/';  /vol/research/visual_localization/experiments run/sand/SAND_features/images/smallkitti
 #   OOPs last frame storage
-#
+
 #To do:
-#   Find essential matrix
+#   Consider scale ambiquity 
+#   Plot R and T
+#   
 #   getpose
 #   Bring back main
-#Done:  Sand key points obtained
+
+#Done:  
+#       Essential matrix (R n T)
+#       Sand key points obtained
 #       reshape keyP desc matrix
-#   matching
+#       matching
 #       Insert 2 images and compute
 #           display all n images (done)
 
