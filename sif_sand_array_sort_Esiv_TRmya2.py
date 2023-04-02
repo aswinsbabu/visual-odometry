@@ -253,7 +253,7 @@ try:
             key_sand_des.append(features_np[y, x])
         key_sand_des = np.asarray(key_sand_des)  # converting to array
         # reshape vector
-        key_sand_des = key_sand_des.reshape(-1, 10)  # length(cordinates) x 10 dimension descriptor
+        key_sand_des = key_sand_des.reshape(-1, 10)  # length(cordinates) x 10 dimension descriptor;
         # print('key_sand_des.shape', key_sand_des.shape, '\n ')
 
         # matching
