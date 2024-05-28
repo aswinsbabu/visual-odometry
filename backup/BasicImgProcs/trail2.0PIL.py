@@ -4,9 +4,32 @@ import numpy as np
 from PIL import Image
 
 # Define paths
-save_path = "D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\siftBF"
-folder_path = "D:\\Tech drive\\Dissertation\\2024_new\\InputImg\\subset"
+output_image_path = "D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\dip\\dipImg.jpg"
+input_image_path = "D:\\Tech drive\\Dissertation\\2024_new\\InputImg\\subset\\XRP_Robot.jpg"
 tag = 'XRP_one_0.65'
+new_dpi = 300  # Desired DPI
+
+def display_images(img):
+    """
+    Display the image using OpenCV.
+    """
+    cv.imshow('Matched Features', img)
+    cv.waitKey(1000)
+    cv.destroyAllWindows()
+    return 0
+
+# Change the DPI using Pillow
+def change_dpi(input_image_path, output_image_path, new_dpi):
+    with Image.open(input_image_path) as img:
+
+        img.save(output_image_path, dpi=(new_dpi, new_dpi))
+
+dpi_img=change_dpi(input_image_path, output_image_path, new_dpi)
+
+display_images(cv.imread(output_image_path))
+
+
+'''
 def resize_image(image):
     """
     Resize the image to half of its original dimensions.
@@ -75,15 +98,8 @@ def save_images(img, save_path, file_name, file_extension):
     new_file_name = file_name + tag + file_extension
     new_file_path = os.path.join(save_path, new_file_name)
     cv.imwrite(new_file_path, img)
+'''
 
-def display_images(img):
-    """
-    Display the image using OpenCV.
-    """
-    cv.imshow('Matched Features', img)
-    cv.waitKey(1000)
-    cv.destroyAllWindows()
-    return 0
 
 # Run the function to read and process all images
-read_all_images()
+#read_all_images()

@@ -54,6 +54,7 @@ print('Inlier ratio:', inlier_ratio)
 #img3 = cv.drawMatchesKnn(img1, kp1, mirror_img, kp2, good_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 # Draw matches with increased line width
 img3 = cv.drawMatchesKnn(img1, kp1, mirror_img, kp2, good_matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS, matchColor=(0, 255, 0), singlePointColor=(255, 0, 0), matchesMask=None)
+
 # Save the modified image to disk
 #cv.imwrite('C:\\Users\\JARVIS\\Documents\\Tech drive\\Dissertation\\output images\\DigiKEYmatch.jpg', img3)  # Save the image
 

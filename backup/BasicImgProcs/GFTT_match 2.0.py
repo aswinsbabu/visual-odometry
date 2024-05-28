@@ -8,6 +8,15 @@ img1 = cv.imread(image1_path)
 # Create a mirror image by flipping horizontally
 mirror_img = cv.flip(img1, 1)  # 1: Flip horizontally, 0: Flip vertically, -1: Flip both horizontally and vertically
 
+# Initialize the GFTT detector
+gftt = cv.GFTTDetector()
+
+# Detect keypoints in the first image
+kp1, des1 = gftt.detectAndCompute(img1, None)
+ 
+# Detect keypoints in the SECOND image
+kp2, des2 = gftt.detectAndCompute(mirror_img, None)
+'''
 # Convert images to grayscale
 gray1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
 gray_mirror = cv.cvtColor(mirror_img, cv.COLOR_BGR2GRAY)
@@ -23,7 +32,7 @@ kp2 = [cv.KeyPoint(x=c[0][0], y=c[0][1], _size=10) for c in corners_mirror]
 # Create descriptors (dummy descriptors since goodFeaturesToTrack doesn't provide descriptors)
 des1 = np.zeros((len(kp1), 128), dtype=np.float32)
 des2 = np.zeros((len(kp2), 128), dtype=np.float32)
-
+'''
 # BFMatcher with default params
 bf = cv.BFMatcher()
 matches = bf.knnMatch(des1, des2, k=2)

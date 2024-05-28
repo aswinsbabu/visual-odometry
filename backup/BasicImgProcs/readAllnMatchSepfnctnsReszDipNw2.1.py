@@ -7,6 +7,13 @@ from PIL import Image
 save_path = "D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\siftBF"
 folder_path = "D:\\Tech drive\\Dissertation\\2024_new\\InputImg\\subset"
 tag = 'XRP_one_0.65'
+new_dpi = 300  # Desired DPI
+
+# Change the DPI using Pillow
+def change_dpi(input_image_path, output_image_path, new_dpi):
+    with Image.open(input_image_path) as img:
+        img.save(output_image_path, dpi=(new_dpi, new_dpi))
+
 def resize_image(image):
     """
     Resize the image to half of its original dimensions.

@@ -2,7 +2,14 @@ import numpy as np
 import cv2 as cv
 
 # Load image
-image1_path = "C:\\Users\\JARVIS\\Downloads\\XRP_Robot-08.jpg"
+#load image
+image1_path = "C:\\Users\\JARVIS\\Documents\\Tech drive\\Dissertation\\2024_new\\InputImg\\cross_ref.jpg"
+#image_path = 'C:\\Users\\JARVIS\\Documents\\Tech drive\\Dissertation\\old experiments run\\feature_match\\lena.jpg'
+#image_path = 'C:\\Users\\JARVIS\\Documents\\Tech drive\\Dissertation\\whole code SAND_features\\images\\sample.png'
+#image_path = "C:\\Users\\JARVIS\\Downloads\\photo.jpg"
+#image_path ="C:\\Users\\JARVIS\\Downloads\\DigiKey.jpg"
+#C:\Users\JARVIS\Documents\Tech drive\Dissertation\whole code SAND_features\images
+#image1_path = "C:\\Users\\JARVIS\\Downloads\\XRP_Robot-08.jpg"
 img1 = cv.imread(image1_path)
 
 # Create a mirror image by flipping horizontally
