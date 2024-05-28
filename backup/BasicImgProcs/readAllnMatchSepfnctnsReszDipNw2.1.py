@@ -1,26 +1,26 @@
 import os
 import cv2 as cv
-import numpy as np
-from PIL import Image
+#import numpy as np
+#from PIL import Image
 
 # Define paths
-save_path = "D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\siftBF"
-folder_path = "D:\\Tech drive\\Dissertation\\2024_new\\InputImg\\subset"
-tag = 'XRP_one_0.65'
-new_dpi = 300  # Desired DPI
+save_path = "D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\siftBF\\sizeBy2\\by2qlty0.6"
+folder_path = "D:\\Tech drive\\Dissertation\\2024_new\\InputImg\\subset" #D:\\Tech drive\\Dissertation\\2024_new\\output images\\matchOut\\siftBF\\sizeBy2\\by2qlty0.6
+tag = 'XRP_one_0.5__2'
+#new_dpi = 300  # Desired DPI
 
 # Change the DPI using Pillow
-def change_dpi(input_image_path, output_image_path, new_dpi):
-    with Image.open(input_image_path) as img:
-        img.save(output_image_path, dpi=(new_dpi, new_dpi))
+# def change_dpi(input_image_path, output_image_path, new_dpi):
+#     with Image.open(input_image_path) as img:
+#         img.save(output_image_path, dpi=(new_dpi, new_dpi))
 
 def resize_image(image):
     """
     Resize the image to half of its original dimensions.
     """
     original_height, original_width = image.shape[:2]
-    new_width = int(original_width // 1)
-    new_height = int(original_height // 1)
+    new_width = int(original_width // 2)
+    new_height = int(original_height // 2)
     resized_image = cv.resize(image, (new_width, new_height), interpolation=cv.INTER_LINEAR)
     display_images(resized_image)
     #display_images(image)
@@ -65,7 +65,7 @@ def match_features(img, file_name, file_extension):
     # Apply ratio test
     good_matches = []
     for m, n in matches:
-        if m.distance < 0.65 * n.distance:
+        if m.distance < 0.5 * n.distance:
             good_matches.append([m])
 
     # Draw matches with increased line width
